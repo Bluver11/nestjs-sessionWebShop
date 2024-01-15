@@ -1,4 +1,4 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Post, Render } from '@nestjs/common';
 import * as mysql from 'mysql2';
 import { AppService } from './app.service';
 
@@ -14,12 +14,18 @@ const conn = mysql.createPool({
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  private products = [
+    { id: 1, nev: 'Körte', ar: 10 },
+    { id: 2, nev: 'Alma', ar: 20 },
+    {id:3, nev:'Eper',ar: 20}
+    
+  ];
+
   @Get()
   @Render('index')
   index() {
-    return { message: 'Welcome to the homepage' };
+    return { products: this.products};
   }
 
-
-  
+ 
 }
