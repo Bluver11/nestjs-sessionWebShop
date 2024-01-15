@@ -25,10 +25,19 @@
 <ul>
     <% productsInCart.forEach(productInCart => { %>
       <li>
-        <%= productInCart.nev %> - $<%= productInCart.ar %>
+        <%= productInCart.nev %> - $<%= productInCart.ar %> - <%= productInCart.id%>
+        - In Cart: <%= countOccurrences(productsInCart.id, cartItems) %> times
       </li>
     <% }); %>
   </ul>
+  <p>Total: $<%= total %></p>
 
+  <% function countOccurrences(id, items) { %>
+    <% let count = 0; %>
+    <% items.forEach(item=> { %>
+      <% if (item.id === id) { count += 1; } %>
+    <% }); %>
+    <% return count; %>
+  <% } %>
 </body>
 </html>

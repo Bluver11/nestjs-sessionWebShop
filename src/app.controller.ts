@@ -1,6 +1,7 @@
 import { Controller, Get, Param, Post, Render, Session } from '@nestjs/common';
 import * as mysql from 'mysql2';
 import { AppService } from './app.service';
+import { setServers } from 'dns';
 
 const conn = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
@@ -28,9 +29,11 @@ export class AppController {
   async getProducts(@Session() session: Record<string,any>) {
     const cartItems = session.cart || [];
     const productsInCart = this.products.filter(product => cartItems.includes(product.id));
-    //const total = productsInCart.reduce((sum, cartItem) => sum + productsInCart.products.price, 0);
+    const total = productsInCart.reduce((sum, product) => sum + product.ar, 0);
+    
+   
 
-    return { products:this.products, cartItems, productsInCart };
+    return { products:this.products, cartItems, productsInCart,total,};
   }
   @Get('cart/add/:id')
   async addToCart(@Param('id') productId: string, @Session() session:  Record<string,any>) {
