@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Render } from '@nestjs/common';
+import { Controller, Get, Param, Post, Render, Session } from '@nestjs/common';
 import * as mysql from 'mysql2';
 import { AppService } from './app.service';
 
@@ -17,15 +17,32 @@ export class AppController {
   private products = [
     { id: 1, nev: 'Körte', ar: 10 },
     { id: 2, nev: 'Alma', ar: 20 },
-    {id:3, nev:'Eper',ar: 20}
+    {id:3, nev:'Eper',ar: 20},
+    {id:4,nev:"Banán",ar:100}
     
   ];
 
+  
   @Get()
   @Render('index')
-  index() {
-    return { products: this.products};
-  }
+  async getProducts(@Session() session: Record<string,any>) {
+    const cartItems = session.cart || [];
+    const productsInCart = this.products.filter(product => cartItems.includes(product.id));
+    //const total = productsInCart.reduce((sum, cartItem) => sum + productsInCart.products.price, 0);
 
+    return { products:this.products, cartItems, productsInCart };
+  }
+  @Get('cart/add/:id')
+  async addToCart(@Param('id') productId: string, @Session() session:  Record<string,any>) {
+    const productIdNumber = parseInt(productId, 10);
+
+    if (!session.cart) {
+      session.cart = [];
+    }
+
+    session.cart.push(productIdNumber);
+
+    return { redirect: '' };
+  }
  
 }

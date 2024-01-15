@@ -21,6 +21,14 @@
 </ul>
 
 <h1>A vásárló kosara</h1>
-   
+
+<ul>
+    <% productsInCart.forEach(productInCart => { %>
+      <li>
+        <%= productInCart.nev %> - $<%= productInCart.ar %>
+      </li>
+    <% }); %>
+  </ul>
+
 </body>
 </html>
